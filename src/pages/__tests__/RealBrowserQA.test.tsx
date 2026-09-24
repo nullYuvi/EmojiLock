@@ -50,8 +50,8 @@ describe('Real Browser QA Test Suite', () => {
       </ToastProvider>
     );
 
-    const textarea = screen.getByPlaceholderText(/Write your secret message here/i);
-    const encodeBtns = screen.getAllByRole('button', { name: /Encode Secret/i });
+    const textarea = screen.getByPlaceholderText(/Type your message/i);
+    const encodeBtns = screen.getAllByRole('button', { name: /Create Emoji Message/i });
     const encodeBtn = encodeBtns[0] as HTMLButtonElement;
 
     expect(encodeBtn.disabled).toBe(true);
@@ -62,11 +62,10 @@ describe('Real Browser QA Test Suite', () => {
     fireEvent.click(encodeBtn);
 
     await waitFor(() => {
-      expect(screen.getByText(/Your Encrypted Emoji Secret/i)).toBeDefined();
+      expect(screen.getByText(/Your emoji message is ready/i)).toBeDefined();
     });
 
-    expect(screen.getByText(/Encoded ✓/i)).toBeDefined();
-
+    
     const payloadBoxes = screen.getAllByText((content, element) => {
       return (
         element?.tagName.toLowerCase() === 'div' &&
@@ -97,48 +96,48 @@ describe('Real Browser QA Test Suite', () => {
       </ToastProvider>
     );
 
-    const navButtons = screen.getAllByRole('button');
-    const encodeNavBtn = navButtons.find(b => b.textContent?.trim() === 'Encode');
-    fireEvent.click(encodeNavBtn!);
+    const encodeNavBtn = screen.getByRole('button', { name: /Hide a Message/i });
+    fireEvent.click(encodeNavBtn);
 
-    const textarea = screen.getByPlaceholderText(/Write your secret message here/i);
+    const textarea = screen.getByPlaceholderText(/Type your message/i);
     fireEvent.change(textarea, { target: { value: message } });
 
-    const pwCheckbox = screen.getByLabelText(/Password protected/i);
+    const pwCheckbox = screen.getByLabelText(/Password \(optional\)/i);
     fireEvent.click(pwCheckbox);
 
-    const pwInput = screen.getByPlaceholderText(/Enter a strong passphrase/i);
+    const pwInput = screen.getByPlaceholderText(/Enter password/i);
     fireEvent.change(pwInput, { target: { value: password } });
 
-    const encodeBtns = screen.getAllByRole('button', { name: /Encode Secret/i });
+    const encodeBtns = screen.getAllByRole('button', { name: /Create Emoji Message/i });
     fireEvent.click(encodeBtns[0]);
 
     await waitFor(() => {
-      expect(screen.getByText(/Your Encrypted Emoji Secret/i)).toBeDefined();
+      expect(screen.getByText(/Your emoji message is ready/i)).toBeDefined();
     });
 
-    const copyBtns = screen.getAllByRole('button', { name: /Copy Secret/i });
+    const copyBtns = screen.getAllByRole('button', { name: /Copy/i });
     fireEvent.click(copyBtns[0]);
 
     await waitFor(() => {
       expect(clipboardContent.length).toBeGreaterThan(10);
     });
 
-    const allBtns = screen.getAllByRole('button');
-    const decodeNavBtn = allBtns.find(b => b.textContent?.trim() === 'Decode');
-    fireEvent.click(decodeNavBtn!);
+    const backBtn = screen.getByRole('button', { name: /Back/i });
+    fireEvent.click(backBtn);
+    const decodeNavBtn = screen.getByRole('button', { name: /Open a Message/i });
+    fireEvent.click(decodeNavBtn);
 
-    const emojiInput = screen.getByPlaceholderText(/Paste your emoji secret here/i);
+    const emojiInput = screen.getByPlaceholderText(/Paste emojis here/i);
     fireEvent.change(emojiInput, { target: { value: clipboardContent } });
 
     const decryptPwInput = screen.getByPlaceholderText(/Enter password/i);
     fireEvent.change(decryptPwInput, { target: { value: password } });
 
-    const decodeBtns = screen.getAllByRole('button', { name: /Decode Secret/i });
+    const decodeBtns = screen.getAllByRole('button', { name: /Open Message/i });
     fireEvent.click(decodeBtns[0]);
 
     await waitFor(() => {
-      expect(screen.getByText(/Decrypted Message/i)).toBeDefined();
+      expect(screen.getByText(/Here's the message/i)).toBeDefined();
       expect(screen.getByText(message)).toBeDefined();
     });
   });
@@ -160,11 +159,11 @@ describe('Real Browser QA Test Suite', () => {
     const pwInput = screen.getByPlaceholderText(/Enter password/i);
     fireEvent.change(pwInput, { target: { value: wrongPassword } });
 
-    const decodeBtns = screen.getAllByRole('button', { name: /Decode Secret/i });
+    const decodeBtns = screen.getAllByRole('button', { name: /Open Message/i });
     fireEvent.click(decodeBtns[0]);
 
     await waitFor(() => {
-      expect(screen.getByText(/Unable to decrypt this secret/i)).toBeDefined();
+      expect(screen.getByText(/That password doesn't work/i)).toBeDefined();
     });
 
     expect(screen.queryByText(message)).toBeNull();
@@ -180,39 +179,35 @@ describe('Real Browser QA Test Suite', () => {
       </ToastProvider>
     );
 
-    const navButtons = screen.getAllByRole('button');
-    const encodeNavBtn = navButtons.find(b => b.textContent?.trim() === 'Encode');
-    fireEvent.click(encodeNavBtn!);
+    const encodeNavBtn = screen.getByRole('button', { name: /Hide a Message/i });
+    fireEvent.click(encodeNavBtn);
 
-    fireEvent.change(screen.getByPlaceholderText(/Write your secret message here/i), {
+    fireEvent.change(screen.getByPlaceholderText(/Type your message/i), {
       target: { value: message }
     });
-    const encodeBtns = screen.getAllByRole('button', { name: /Encode Secret/i });
+    const encodeBtns = screen.getAllByRole('button', { name: /Create Emoji Message/i });
     fireEvent.click(encodeBtns[0]);
 
     await waitFor(() => {
-      expect(screen.getByText(/Your Encrypted Emoji Secret/i)).toBeDefined();
+      expect(screen.getByText(/Your emoji message is ready/i)).toBeDefined();
     });
 
-    const copyBtns = screen.getAllByRole('button', { name: /Copy Secret/i });
+    const copyBtns = screen.getAllByRole('button', { name: /Copy/i });
     fireEvent.click(copyBtns[0]);
     await waitFor(() => {
       expect(clipboardContent.length).toBeGreaterThan(10);
     });
 
-    const allBtns = screen.getAllByRole('button');
-    const decodeNavBtn = allBtns.find(b => b.textContent?.trim() === 'Decode');
-    fireEvent.click(decodeNavBtn!);
+    const backBtn = screen.getByRole('button', { name: /Back/i });
+    fireEvent.click(backBtn);
+    const decodeNavBtn = screen.getByRole('button', { name: /Open a Message/i });
+    fireEvent.click(decodeNavBtn);
 
-    const pasteBtn = screen.getByRole('button', { name: /Paste/i });
-    fireEvent.click(pasteBtn);
+    const decodeTextarea = screen.getByPlaceholderText(/Paste emojis here/i) as HTMLTextAreaElement;
+    fireEvent.change(decodeTextarea, { target: { value: clipboardContent } });
 
-    await waitFor(() => {
-      const decodeTextarea = screen.getByPlaceholderText(/Paste your emoji secret here/i) as HTMLTextAreaElement;
-      expect(decodeTextarea.value).toBe(clipboardContent);
-    });
 
-    const decodeBtns = screen.getAllByRole('button', { name: /Decode Secret/i });
+    const decodeBtns = screen.getAllByRole('button', { name: /Open Message/i });
     fireEvent.click(decodeBtns[0]);
 
     await waitFor(() => {
@@ -253,14 +248,14 @@ describe('Real Browser QA Test Suite', () => {
       </ToastProvider>
     );
 
-    const decodeBtns = screen.getAllByRole('button', { name: /Decode Secret/i });
+    const decodeBtns = screen.getAllByRole('button', { name: /Open Message/i });
     fireEvent.click(decodeBtns[0]);
 
     await waitFor(() => {
       const hasError =
-        screen.queryByText(/Unable to decrypt this secret/i) ||
-        screen.queryByText(/Incomplete secret/i) ||
-        screen.queryByText(/Invalid signature/i);
+        screen.queryByText(/That password doesn't work/i) ||
+        
+        screen.queryByText(/incomplete or changed/i);
       expect(hasError).not.toBeNull();
     });
 
@@ -275,7 +270,7 @@ describe('Real Browser QA Test Suite', () => {
       </ToastProvider>
     );
 
-    const encodeBtns = screen.getAllByRole('button', { name: /Encode Secret/i });
+    const encodeBtns = screen.getAllByRole('button', { name: /Create Emoji Message/i });
     const encodeBtn = encodeBtns[0] as HTMLButtonElement;
     expect(encodeBtn.disabled).toBe(true);
     expect(screen.queryByText(/Unable to encode this message/i)).toBeNull();
@@ -289,9 +284,9 @@ describe('Real Browser QA Test Suite', () => {
       </ToastProvider>
     );
 
-    const mainWrapper = container.querySelector('.max-w-3xl');
+    const mainWrapper = container.querySelector('.max-w-\\[650px\\]');
     expect(mainWrapper).not.toBeNull();
-    expect(mainWrapper?.className).toContain('px-4');
+    expect(mainWrapper?.className).toContain('px-5');
     expect(mainWrapper?.className).toContain('sm:px-6');
   });
 
@@ -303,15 +298,14 @@ describe('Real Browser QA Test Suite', () => {
       </ToastProvider>
     );
 
-    const headings = screen.getAllByText(/Hide a secret in/i);
+    const headings = screen.getAllByText(/Hide a secret/i);
     expect(headings.length).toBeGreaterThan(0);
 
-    const navButtons = screen.getAllByRole('button');
-    const encodeNavBtn = navButtons.find(b => b.textContent?.trim() === 'Encode');
-    fireEvent.click(encodeNavBtn!);
+    const encodeNavBtn = screen.getByRole('button', { name: /Hide a Message/i });
+    fireEvent.click(encodeNavBtn);
 
-    const encodeTextarea = screen.getByPlaceholderText(/Write your secret message here/i) as HTMLTextAreaElement;
+    const encodeTextarea = screen.getByPlaceholderText(/Type your message/i) as HTMLTextAreaElement;
     expect(encodeTextarea.value).toBe('');
-    expect(screen.queryByText(/Your Encrypted Emoji Secret/i)).toBeNull();
+    expect(screen.queryByText(/Your emoji message is ready/i)).toBeNull();
   });
 });

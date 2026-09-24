@@ -6,7 +6,6 @@ import { EncodePage } from './pages/EncodePage';
 import { DecodePage } from './pages/DecodePage';
 import { CompatibilityPage } from './pages/CompatibilityPage';
 import { PrivacyPage } from './pages/PrivacyPage';
-import { EmojiConstellation } from './components/ui/EmojiConstellation';
 import { ToastProvider } from './hooks/useToast';
 
 export const App: React.FC = () => {
@@ -41,15 +40,12 @@ export const App: React.FC = () => {
 
   return (
     <ToastProvider>
-      <div className="min-h-screen flex flex-col bg-[#07090e] text-slate-100 relative overflow-x-hidden selection:bg-emerald-500/20 selection:text-emerald-300">
-        {/* Animated Constellation Background */}
-        <EmojiConstellation />
-
+      <div className="min-h-screen flex flex-col relative bg-brand-warm">
         {/* Navigation Bar */}
         <Navbar activeTab={activeTab} onSelectTab={setActiveTab} />
 
         {/* Active Page View */}
-        <main className="flex-1">
+        <main className="flex-1 w-full flex flex-col">
           {activeTab === 'home' && <HomePage onSelectTab={setActiveTab} />}
           {activeTab === 'encode' && (
             <EncodePage
